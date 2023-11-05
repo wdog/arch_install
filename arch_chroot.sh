@@ -138,10 +138,10 @@ elif grep -E "Intel Corporation UHD" <<< ${gpu_type}; then
 fi
 
 
-pacman -S --needed gdm
-pacman -S --needed xorg-xwayland xorg-xlsclients glfw-wayland
+pacman -S --noconfirm --needed gdm
+pacman -S --noconfirm --needed xorg-xwayland xorg-xlsclients glfw-wayland
 
-sudo pacman -S --needed gnome gnome-tweaks gnome-nettool gnome-usage gnome-multi-writer \
+sudo pacman -S --needed --noconfirm gnome gnome-tweaks gnome-nettool gnome-usage gnome-multi-writer \
     adwaita-icon-theme xdg-user-dirs-gtk fwupd arc-gtk-theme
 
 pacman -S --noconfirm sudo pacman-contrib archlinux-contrib reflector mesa pipewire pipewire-alsa \
