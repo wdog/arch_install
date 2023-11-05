@@ -195,8 +195,8 @@ echo -ne "
 arch-chroot /mnt /root/arch_chroot.sh
 
 
-umount -R /mnt
-cryptsetup close /dev/mapper/cryptroot
-reboot
+#umount -R /mnt
+#cryptsetup close /dev/mapper/cryptroot
+#reboot
 
 exit

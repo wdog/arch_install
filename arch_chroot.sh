@@ -138,8 +138,14 @@ elif grep -E "Intel Corporation UHD" <<< ${gpu_type}; then
 fi
 
 
-pacman -S --noconfirm sudo pacman-contrib archlinux-contrib reflector mesa #vulkan-radeon libva-mesa-driver
-pacman -S --noconfirm gnome gnome-tweaks pipewire pipewire-alsa pipewire-pulse pipewire-jack wireplumber firewalld noto-fonts git alacritty htop wdog curl
+pacman -S --needed gdm
+pacman -S --needed xorg-xwayland xorg-xlsclients glfw-wayland
+
+sudo pacman -S --needed gnome gnome-tweaks gnome-nettool gnome-usage gnome-multi-writer \
+    adwaita-icon-theme xdg-user-dirs-gtk fwupd arc-gtk-theme
+
+pacman -S --noconfirm sudo pacman-contrib archlinux-contrib reflector mesa pipewire pipewire-alsa \
+    pipewire-pulse pipewire-jack wireplumber firewalld noto-fonts git alacritty htop curl
 
 systemctl enable fstrim.timer paccache.timer reflector.timer gdm firewalld bluetooth NetworkManager
 
