@@ -125,31 +125,37 @@ echo -ne "
 "
 
 # Graphics Drivers find and install
-gpu_type=$(lspci)
-if grep -E "NVIDIA|GeForce" <<< ${gpu_type}; then
-    pacman -S --noconfirm --needed nvidia
-	nvidia-xconfig
-elif lspci | grep 'VGA' | grep -E "Radeon|AMD"; then
-    pacman -S --noconfirm --needed xf86-video-amdgpu
-elif grep -E "Integrated Graphics Controller" <<< ${gpu_type}; then
-    pacman -S --noconfirm --needed libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils lib32-mesa
-elif grep -E "Intel Corporation UHD" <<< ${gpu_type}; then
-    pacman -S --needed --noconfirm libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils lib32-mesa
-fi
+# gpu_type=$(lspci)
+# if grep -E "NVIDIA|GeForce" <<< ${gpu_type}; then
+#     pacman -S --noconfirm --needed nvidia
+# 	nvidia-xconfig
+# elif lspci | grep 'VGA' | grep -E "Radeon|AMD"; then
+#     pacman -S --noconfirm --needed xf86-video-amdgpu
+# elif grep -E "Integrated Graphics Controller" <<< ${gpu_type}; then
+#     pacman -S --noconfirm --needed libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils lib32-mesa
+# elif grep -E "Intel Corporation UHD" <<< ${gpu_type}; then
+#     pacman -S --needed --noconfirm libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils lib32-mesa
+# fi
 
 
-pacman -S --noconfirm --needed gdm
-pacman -S --noconfirm --needed xorg-xwayland xorg-xlsclients glfw-wayland
+# pacman -S --needed --noconfirm pipewire-jack pipewire  noto-fonts firewalld  gnome gnome-tweaks gdm reflector pacman-contrib sudo alacritty git
 
-sudo pacman -S --needed --noconfirm gnome gnome-tweaks gnome-nettool gnome-usage gnome-multi-writer \
-    adwaita-icon-theme xdg-user-dirs-gtk fwupd arc-gtk-theme
 
-pacman -S --noconfirm sudo pacman-contrib archlinux-contrib reflector mesa pipewire pipewire-alsa \
-    pipewire-pulse pipewire-jack wireplumber firewalld noto-fonts git alacritty htop curl
+pacman -S --noconfirm sudo nautilus wireplumber gnome-desktop gdm gnome-control-center gnome-keyring \
+    gnome-themes-extra networkmanager alacritty pipewire pipewire-pulse pipewire-alsa mesa \
+    pacutils firefox fish firewalld git hot curl git pacman-contrib
 
-systemctl enable fstrim.timer paccache.timer reflector.timer gdm firewalld bluetooth NetworkManager
+# pacman -S --noconfirm sudo pacman-contrib archlinux-contrib reflector mesa pipewire pipewire-alsa \
+#     pipewire-pulse pipewire-jack wireplumber firewalld noto-fonts git alacritty htop curl
 
-pacman -S --noconfirm pacutils firefox fish
+systemctl enable -f fstrim.timer
+systemctl enable -f paccache.timer
+systemctl enable -f reflector.timer
+systemctl enable -f firewalld
+systemctl enable -f bluetooth
+systemctl enable -f --now NetworkManager
+systemctl enable -f --now gdm.service
+
 
 rm -rf /root/*.sh
 
