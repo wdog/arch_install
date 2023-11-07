@@ -163,7 +163,8 @@ echo -ne "
 -------------------------------------------------------------------------
 "
 
-pacstrap /mnt base linux linux-firmware btrfs-progs networkmanager vim man-db man-pages ntp grub efibootmgr base-devel wget archlinux-keyring --noconfirm --needed
+pacman -Sy
+pacstrap /mnt base base-devel linux linux-firmware btrfs-progs networkmanager vim man-db man-pages ntp grub efibootmgr wget archlinux-keyring --noconfirm
 
 cp -R ${SCRIPT_DIR}/arch_chroot.sh /mnt/root/
 
@@ -192,11 +193,11 @@ echo -ne "
 -------------------------------------------------------------------------
 "
 
-arch-chroot /mnt /root/arch_chroot.sh
+#arch-chroot /mnt /root/arch_chroot.sh
 
 
-umount -R /mnt
-cryptsetup close /dev/mapper/cryptroot
-reboot
+#umount -R /mnt
+#cryptsetup close /dev/mapper/cryptroot
+#reboot
 
 exit

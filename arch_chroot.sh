@@ -15,21 +15,24 @@ echo -ne "
 
 echo $NAME_OF_MACHINE > /etc/hostname
 
+
+echo -ne "
+127.0.0.1        localhost
+::1              localhost
+127.0.1.1        $NAME_OF_MACHINE
+" > /etc/hosts
+
 sed -i 's/#en_US.UTF-8/en_US.UTF-8/g' /etc/locale.gen
 sed -i 's/#it_IT.UTF-8/it_IT.UTF-8/g' /etc/locale.gen
 locale-gen
 
 
 ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime
-echo "KEYMAP=it" > /etc/vconsole.conf
 
-#timedatectl --no-ask-password set-timezone ${TIMEZONE}
-#timedatectl --no-ask-password set-ntp 1
+echo LANG=it_IT.UTF-8 > /etc/locale.conf
+echo KEYMAP=${KEYMAP} > /etc/vconsole.conf
+
 hwclock --systohc --utc
-# Set keymaps
-#localectl --no-ask-password set-locale LANG="it_IT.UTF-8" LC_TIME="it_IT.UTF-8"
-# Set keymaps
-#localectl --no-ask-password set-keymap ${KEYMAP}
 
 echo -ne "
 -------------------------------------------------------------------------
@@ -46,7 +49,7 @@ sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
 
 #Enable multilib
 sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
-pacman -Sy --noconfirm --needed
+pacman -Sy --noconfirm
 
 
 echo -ne "
@@ -60,11 +63,11 @@ proc_type=$(lscpu)
 if grep -E "GenuineIntel" <<< ${proc_type}; then
     echo "Installing Intel microcode"
     pacman -S --noconfirm --needed intel-ucode
-    proc_ucode=intel-ucode.img
+    # proc_ucode=intel-ucode.img
 elif grep -E "AuthenticAMD" <<< ${proc_type}; then
     echo "Installing AMD microcode"
     pacman -S --noconfirm --needed amd-ucode
-    proc_ucode=amd-ucode.img
+    # proc_ucode=amd-ucode.img
 fi
 
 
@@ -120,7 +123,7 @@ sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 
 echo -ne "
 -------------------------------------------------------------------------
-                    Installing Graphics Drivers
+                    Installing Packages
 -------------------------------------------------------------------------
 "
 
@@ -138,12 +141,11 @@ echo -ne "
 # fi
 
 
-# pacman -S --needed --noconfirm pipewire-jack pipewire  noto-fonts firewalld  gnome gnome-tweaks gdm reflector pacman-contrib sudo alacritty git
 
-
-pacman -S --noconfirm sudo nautilus wireplumber gnome-desktop gdm gnome-control-center gnome-keyring \
-    gnome-themes-extra networkmanager alacritty pipewire pipewire-pulse pipewire-alsa mesa \
-    pacutils firefox fish firewalld git hot curl git pacman-contrib
+pacman -Sy --noconfirm networkmanager
+pacman -Sy --noconfirm pacman-contrib reflector sudo
+pacman -Sy --noconfirm gnome-desktop gdm gnome-extra alacritty nautilus gnome-tweaks gnome-shell gnome-shell-extensions pipewire pipewire-pulse pipewire-alsa wireplumber gnome-bluetooth
+pacman -Sy --noconfirm firefox fish gnome-power-manager
 
 # pacman -S --noconfirm sudo pacman-contrib archlinux-contrib reflector mesa pipewire pipewire-alsa \
 #     pipewire-pulse pipewire-jack wireplumber firewalld noto-fonts git alacritty htop curl
@@ -151,10 +153,9 @@ pacman -S --noconfirm sudo nautilus wireplumber gnome-desktop gdm gnome-control-
 systemctl enable -f fstrim.timer
 systemctl enable -f paccache.timer
 systemctl enable -f reflector.timer
-systemctl enable -f firewalld
 systemctl enable -f bluetooth
-systemctl enable -f --now NetworkManager
-systemctl enable -f --now gdm.service
+systemctl enable -f NetworkManager
+systemctl enable -f gdm.service
 
 
 rm -rf /root/*.sh
